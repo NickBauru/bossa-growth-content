@@ -4676,9 +4676,9 @@ async function loadRemoteData(workspaceId) {
 
 async function loadClientPosts(workspaceId) {
   const { data } = await sb.from('posts').select('*').eq('workspace_id', workspaceId);
+  // Always clear hardcoded posts for client workspaces
+  posts.length = 0;
   if (data && data.length > 0) {
-    // Replace hardcoded posts with client's posts from DB
-    posts.length = 0;
     data.forEach(p => posts.push({
       id: p.id, week: p.week, weekday: p.weekday,
       platform: p.platform, format: p.format, profile: p.profile || 'client',
