@@ -4363,6 +4363,8 @@ function setView(v) {
 // DAILY STORIES FRAMEWORK — NICOLAS
 // Repete toda semana. Mosseri: máx 5–7/sessão.
 // ─────────────────────────────────────────
+let activeStoryDays = null; // set per workspace on init
+
 const storyDays = [
   {
     day: 'SEG', weekday: 1,
@@ -4464,6 +4466,134 @@ const storyDays = [
   }
 ];
 
+// ─────────────────────────────────────────
+// DAILY STORIES FRAMEWORK — CAROLINA
+// ─────────────────────────────────────────
+const carolinaStoryDays = [
+  {
+    day: 'SEG', weekday: 1,
+    emoji: '🩺',
+    theme: 'Bastidores da Clínica',
+    mosseri: 'Segunda é dia de alta intenção. Bastidores reais geram conexão e replies orgânicos — mostra que existe uma pessoa real por trás do consultório.',
+    stories: [
+      { num:1, text: 'Chegada à clínica — consultório, café na mesa, agenda aberta. Sem filtro.', sticker: null },
+      { num:2, text: 'Uma frase sobre o que vem na semana: consultas, estudo, novidade. Só contexto real.', sticker: null },
+      { num:3, text: '"O que você quer entender melhor essa semana?"', sticker: 'ENQUETE: "Sono" / "Neuro"' },
+      { num:4, text: 'Preview do conteúdo que sai essa semana. "Quinta tem isso aqui."', sticker: 'CONTAGEM' },
+      { num:5, text: '"DM aberto. Dúvida sobre sono ou neuro do seu filho — é aqui."', sticker: 'DM LINK' }
+    ]
+  },
+  {
+    day: 'TER', weekday: 2,
+    emoji: '🧠',
+    theme: 'Fato Científico',
+    mosseri: 'Terça é pico de engajamento. Conteúdo educativo curto em stories tem alta taxa de reply quando termina com pergunta aberta.',
+    stories: [
+      { num:1, text: 'Um fato sobre sono ou neuro que a maioria não sabe. 1 slide, texto curto, fundo limpo.', sticker: null },
+      { num:2, text: 'Por que esse fato importa na prática. 1-2 frases. Sem jargão.', sticker: null },
+      { num:3, text: '"Você sabia disso?"', sticker: 'ENQUETE: "Sabia!" / "Nunca ouvi falar"' },
+      { num:4, text: 'Compartilhar o Reel ou carrossel do dia com CTA de salvamento.', sticker: 'LINK POST' },
+      { num:5, text: 'Responder 1-2 dúvidas frequentes que chegaram no DM — sem expor quem enviou.', sticker: null }
+    ]
+  },
+  {
+    day: 'QUA', weekday: 3,
+    emoji: '☕',
+    theme: 'Vida Pessoal',
+    mosseri: 'Quarta humaniza o perfil. Médica que só posta medicina cansa. Vida real aumenta score de conexão com o algoritmo e gera replies de qualidade.',
+    stories: [
+      { num:1, text: 'Momento pessoal real — café, livro, caminhada. Sem jaleco.', sticker: null },
+      { num:2, text: 'O que está lendo, assistindo ou ouvindo agora. Pode ser fora da medicina.', sticker: null },
+      { num:3, text: '"Você é mais:"', sticker: 'ENQUETE: "Manhã quieta" / "Noite produtiva"' },
+      { num:4, text: 'Algo que aprendeu fora da medicina essa semana. 1 frase.', sticker: null },
+      { num:5, text: '"Me conta: o que você faz pra descansar de verdade?"', sticker: 'CAIXINHA' }
+    ]
+  },
+  {
+    day: 'QUI', weekday: 4,
+    emoji: '❓',
+    theme: 'Perguntas & Respostas',
+    mosseri: 'Q&A tem a maior taxa de reply da semana. Responder dúvidas publicamente gera identificação e posiciona como referência acessível.',
+    stories: [
+      { num:1, text: '"Caixinha aberta — perguntas sobre sono e neuro. Respondo hoje aqui."', sticker: 'CAIXINHA' },
+      { num:2, text: 'Resposta 1: dúvida frequente sobre sono infantil. Texto ou vídeo curto.', sticker: null },
+      { num:3, text: 'Resposta 2: dúvida sobre TDAH, TEA ou desenvolvimento. Empático e direto.', sticker: null },
+      { num:4, text: 'Resposta 3: dúvida sobre sono adulto ou cronotipo.', sticker: null },
+      { num:5, text: '"Não respondi a sua? Manda de novo — semana que vem trago mais."', sticker: null }
+    ]
+  },
+  {
+    day: 'SEX', weekday: 5,
+    emoji: '🌙',
+    theme: 'Reflexão + Dica de Sono',
+    mosseri: 'Sexta à tarde tem pico de visualização. Dica de sono para o fim de semana tem alto potencial de compartilhamento — as pessoas mandam para parceiros e família.',
+    stories: [
+      { num:1, text: '"Sexta." — foto simples do momento. O silêncio comunica.', sticker: null },
+      { num:2, text: 'Uma coisa que a semana confirmou na clínica — padrão que se repete. Sem identificar paciente.', sticker: null },
+      { num:3, text: 'Dica de sono para o fim de semana: horário consistente, luz, rotina noturna. 1 dica concreta.', sticker: null },
+      { num:4, text: '"Semana foi:"', sticker: 'ENQUETE: "Intensa e boa" / "Preciso de sábado"' },
+      { num:5, text: '"Bom descanso. Sono de qualidade não é luxo — é medicina."', sticker: null }
+    ]
+  },
+  {
+    day: 'SÁB', weekday: 6,
+    emoji: '🌿',
+    theme: 'Vida Real / Descanso',
+    mosseri: 'Sábado tem o maior volume de stories no Brasil. Médica com vida real gera mais confiança do que médica só em consultório.',
+    stories: [
+      { num:1, text: 'Manhã de sábado — café, silêncio, luz natural. O que aconteceu de verdade.', sticker: null },
+      { num:2, text: 'Algo que está curtindo hoje: natureza, família, série, restaurante. Sem performance.', sticker: null },
+      { num:3, text: 'O que está consumindo — livro, série, podcast. O que está na fila agora.', sticker: null },
+      { num:4, text: '"O que você está fazendo esse sábado?"', sticker: 'ENQUETE: "Trabalhando" / "Descansando (certo!)"' },
+      { num:5, text: 'Foto do fim do dia — janta, saída, momento com pessoas que importam.', sticker: null }
+    ]
+  },
+  {
+    day: 'DOM', weekday: 7,
+    emoji: '💤',
+    theme: 'Higiene do Sono / Semana',
+    mosseri: 'Domingo de manhã tem alta taxa de visualização de stories de bem-estar. Dica de higiene do sono para preparar a semana tem alto potencial de salvamento.',
+    stories: [
+      { num:1, text: 'Foto da manhã de domingo — calma, luz suave, ritual pessoal.', sticker: null },
+      { num:2, text: 'Um pensamento ou reflexão. Pode ser sobre medicina, vida ou qualquer coisa real.', sticker: null },
+      { num:3, text: 'Dica de higiene do sono para começar bem a semana. 1 dica concreta e prática.', sticker: null },
+      { num:4, text: '"O que vai ser diferente essa semana?"', sticker: 'CAIXINHA' },
+      { num:5, text: 'Preview da semana que vem — 1 frase sobre o conteúdo que chega.', sticker: null }
+    ]
+  }
+];
+
+// Auto-gera posts de stories Carolina para as semanas 4–11
+const carolinaWeekDateLabels = [
+  null, null, null, // semanas 1-3 (Nicolas)
+  ['Seg 04/Mai','Ter 05/Mai','Qua 06/Mai','Qui 07/Mai','Sex 08/Mai','Sáb 09/Mai','Dom 10/Mai'],
+  ['Seg 11/Mai','Ter 12/Mai','Qua 13/Mai','Qui 14/Mai','Sex 15/Mai','Sáb 16/Mai','Dom 17/Mai'],
+  ['Seg 18/Mai','Ter 19/Mai','Qua 20/Mai','Qui 21/Mai','Sex 22/Mai','Sáb 23/Mai','Dom 24/Mai'],
+  ['Seg 25/Mai','Ter 26/Mai','Qua 27/Mai','Qui 28/Mai','Sex 29/Mai','Sáb 30/Mai','Dom 31/Mai'],
+  ['Seg 01/Jun','Ter 02/Jun','Qua 03/Jun','Qui 04/Jun','Sex 05/Jun','Sáb 06/Jun','Dom 07/Jun'],
+  ['Seg 08/Jun','Ter 09/Jun','Qua 10/Jun','Qui 11/Jun','Sex 12/Jun','Sáb 13/Jun','Dom 14/Jun'],
+  ['Seg 15/Jun','Ter 16/Jun','Qua 17/Jun','Qui 18/Jun','Sex 19/Jun','Sáb 20/Jun','Dom 21/Jun'],
+  ['Seg 22/Jun','Ter 23/Jun','Qua 24/Jun','Qui 25/Jun','Sex 26/Jun','Sáb 27/Jun','Dom 28/Jun']
+];
+
+function seedCarolinaPosts() {
+  carolinaStoryDays.forEach(tpl => {
+    for (let w = 4; w <= 11; w++) {
+      const labels = carolinaWeekDateLabels[w - 1];
+      posts.push({
+        id: `cs_${tpl.day.toLowerCase()}_w${w}`,
+        week: w, weekday: tpl.weekday,
+        dateLabel: labels ? labels[tpl.weekday - 1] : '',
+        profile: 'carolina', platform: 'instagram', format: 'stories',
+        title: `Stories ${tpl.day} — ${tpl.theme}`,
+        horario: tpl.weekday <= 5 ? '08h' : '10h',
+        hook: `${tpl.emoji} ${tpl.theme}`,
+        mosseri: tpl.mosseri, cta: null, stories: tpl.stories
+      });
+    }
+  });
+}
+
 // Auto-gera posts de stories Nicolas para as 4 semanas
 const weekDateLabels = [
   ['Dom 13/Abr','Seg 14/Abr','Qua 15/Abr','Qui 16/Abr','Sex 17/Abr','Sáb 18/Abr','Dom 19/Abr'],
@@ -4499,7 +4629,8 @@ storyDays.forEach(tpl => {
 function renderRoutine() {
   const grid = document.getElementById('routine-grid');
   if (!grid) return;
-  grid.innerHTML = storyDays.map(tpl => `
+  const days = activeStoryDays || storyDays;
+  grid.innerHTML = days.map(tpl => `
     <div class="routine-day nicolas-accent" onclick="openRoutineModal('${tpl.day}')">
       <div class="routine-day-name">${tpl.day}</div>
       <span class="routine-day-emoji">${tpl.emoji}</span>
@@ -4515,7 +4646,8 @@ function renderRoutine() {
 }
 
 function openRoutineModal(day) {
-  const tpl = storyDays.find(t => t.day === day);
+  const days = activeStoryDays || storyDays;
+  const tpl = days.find(t => t.day === day);
   if (!tpl) return;
 
   document.getElementById('modal-meta').innerHTML = `
@@ -4759,14 +4891,28 @@ async function initApp() {
   // Load remote data (overrides localStorage)
   await loadRemoteData(workspace.id);
 
-  // If not nicolas workspace, load client's posts from DB and hide nicolas-only sections
+  // If not nicolas workspace, load client posts + configure per-workspace UI
   if (workspace.slug !== 'nicolas') {
     await loadClientPosts(workspace.id);
     document.getElementById('profiles-section').style.display = 'none';
-    document.getElementById('routine-section').style.display = 'none';
     // Hide nicolas/bossa profile filter chips
     const legendGroups = document.querySelectorAll('.legend-group');
     if (legendGroups[0]) legendGroups[0].style.display = 'none';
+
+    // Configure workspace-specific Stories routine
+    if (workspace.slug === 'carolina') {
+      activeStoryDays = carolinaStoryDays;
+      seedCarolinaPosts();
+      document.getElementById('routine-section').style.display = '';
+      const titleEl = document.querySelector('.routine-title');
+      if (titleEl) titleEl.textContent = 'Stories Diários — Dra. Carolina Casarin';
+      const subEl = document.querySelector('.routine-sub');
+      if (subEl) subEl.textContent = 'Todo dia, 5 stories. Rotina fixa por dia da semana. Humanização + autoridade.';
+    } else {
+      document.getElementById('routine-section').style.display = 'none';
+    }
+  } else {
+    activeStoryDays = storyDays;
   }
 
   startApp();
