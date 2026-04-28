@@ -916,17 +916,8 @@
   </div>
 
   <!-- FILTERS -->
-  <div class="filters">
+  <div class="filters" id="filters-bar">
     <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">Todos</button>
-    <button class="filter-btn" data-filter="nicolas" onclick="setFilter('nicolas')">Nicolas</button>
-    <button class="filter-btn" data-filter="bossa" onclick="setFilter('bossa')">Bossa</button>
-    <button class="filter-btn" data-filter="instagram" onclick="setFilter('instagram')">Instagram</button>
-    <button class="filter-btn" data-filter="linkedin" onclick="setFilter('linkedin')">LinkedIn</button>
-    <button class="filter-btn" data-filter="reel" onclick="setFilter('reel')">Reel</button>
-    <button class="filter-btn" data-filter="carrossel" onclick="setFilter('carrossel')">Carrossel</button>
-    <button class="filter-btn" data-filter="feed" onclick="setFilter('feed')">Feed</button>
-    <button class="filter-btn" data-filter="stories" onclick="setFilter('stories')">Stories</button>
-    <button class="filter-btn" data-filter="lifestyle" onclick="setFilter('lifestyle')">Lifestyle</button>
   </div>
 
   <!-- WEEK VIEW -->
@@ -4581,10 +4572,28 @@ function buildWeekTabs() {
 }
 
 // INIT — chamado após auth + carregamento do Supabase
+const FILTER_LABELS = {
+  nicolas: 'Nicolas', bossa: 'Bossa',
+  instagram: 'Instagram', linkedin: 'LinkedIn', tiktok: 'TikTok', youtube: 'YouTube',
+  reel: 'Reel', carrossel: 'Carrossel', feed: 'Feed', stories: 'Stories',
+  postli: 'Post LI', lifestyle: 'Lifestyle', video: 'Vídeo', thread: 'Thread'
+};
+
+function renderFilters() {
+  const bar = document.getElementById('filters-bar');
+  const profiles  = [...new Set(posts.map(p => p.profile).filter(Boolean))];
+  const platforms = [...new Set(posts.map(p => p.platform).filter(Boolean))];
+  const formats   = [...new Set(posts.map(p => p.format).filter(Boolean))];
+  const all = [...profiles, ...platforms, ...formats];
+  bar.innerHTML = '<button class="filter-btn active" data-filter="all" onclick="setFilter(\'all\')">Todos</button>'
+    + all.map(f => `<button class="filter-btn" data-filter="${f}" onclick="setFilter('${f}')">${FILTER_LABELS[f] || f}</button>`).join('');
+}
+
 function startApp() {
   updateTodayPill();
   currentWeek = getCurrentWeek();
   buildWeekTabs();
+  renderFilters();
   renderRoutine();
   renderWeek(currentWeek);
 }
