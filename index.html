@@ -4562,9 +4562,11 @@ function buildWeekTabs() {
   const wd = buildWeekDates();
   const container = document.getElementById('week-tabs-container');
   if (!container) return;
+  const weeksWithPosts = new Set(posts.map(p => p.week));
   container.innerHTML = WEEK_LABELS.map((label, i) => {
     const w = i + 1;
-    const hasToday = wd[i].some(d => d.today);
+    if (!weeksWithPosts.has(w)) return '';
+    const hasToday = wd[i] && wd[i].some(d => d.today);
     return `<button class="week-tab${w === currentWeek ? ' active' : ''}" data-week="${w}" onclick="setWeek(${w})">
       Semana ${w} · ${label}${hasToday ? '<span class="today-dot"></span>' : ''}
     </button>`;
