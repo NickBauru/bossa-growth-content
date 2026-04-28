@@ -851,7 +851,7 @@
 <div class="main">
 
   <!-- PROFILES -->
-  <div class="dual-header">
+  <div class="dual-header" id="profiles-section">
     <div class="profile-card nicolas">
       <div class="profile-name nicolas">Nicolas Antunes</div>
       <div class="profile-handles">@nickantunes · /in/nicolasantunes-marketing</div>
@@ -897,7 +897,7 @@
   </div>
 
   <!-- STORIES DAILY ROUTINE -->
-  <div class="routine-block">
+  <div class="routine-block" id="routine-section">
     <div class="routine-header">
       <span class="routine-icon">⭕</span>
       <div>
@@ -4748,9 +4748,14 @@ async function initApp() {
   // Load remote data (overrides localStorage)
   await loadRemoteData(workspace.id);
 
-  // If not nicolas workspace, load client's posts from DB
+  // If not nicolas workspace, load client's posts from DB and hide nicolas-only sections
   if (workspace.slug !== 'nicolas') {
     await loadClientPosts(workspace.id);
+    document.getElementById('profiles-section').style.display = 'none';
+    document.getElementById('routine-section').style.display = 'none';
+    // Hide nicolas/bossa profile filter chips
+    const legendGroups = document.querySelectorAll('.legend-group');
+    if (legendGroups[0]) legendGroups[0].style.display = 'none';
   }
 
   startApp();
