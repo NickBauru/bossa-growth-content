@@ -4769,6 +4769,33 @@ window._supabase = sb;
 window._workspace = null;
 
 // ── AUTH FUNCTIONS ──────────────────────────────────────────────
+function prefillSavedEmail() {
+  const saved = localStorage.getItem('bossa_last_email');
+  if (!saved) return;
+  const input = document.getElementById('auth-email');
+  const btn   = document.getElementById('auth-btn');
+  const msg   = document.getElementById('auth-msg');
+  input.value = saved;
+  input.readOnly = true;
+  btn.textContent = 'Enviar link de acesso →';
+  msg.innerHTML = 'Acesso já cadastrado neste dispositivo. <a href="#" onclick="clearSavedEmail(event)" style="color:var(--nicolas);text-decoration:underline">Não é você?</a>';
+  msg.className = 'auth-msg';
+}
+
+function clearSavedEmail(e) {
+  if (e) e.preventDefault();
+  localStorage.removeItem('bossa_last_email');
+  const input = document.getElementById('auth-email');
+  const btn   = document.getElementById('auth-btn');
+  const msg   = document.getElementById('auth-msg');
+  input.value = '';
+  input.readOnly = false;
+  input.focus();
+  btn.textContent = 'Entrar sem senha →';
+  msg.textContent = '';
+  msg.className = 'auth-msg';
+}
+
 async function sendMagicLink() {
   const email = document.getElementById('auth-email').value.trim();
   const btn   = document.getElementById('auth-btn');
@@ -4867,8 +4894,10 @@ async function initApp() {
       // Local dev: skip auth, use nicolas workspace implicitly
       document.getElementById('auth-overlay').classList.add('hidden');
       startApp();
+    } else {
+      // Pré-preenche email salvo para facilitar o re-login
+      prefillSavedEmail();
     }
-    // else: auth overlay stays visible
     return;
   }
 
@@ -4921,6 +4950,8 @@ async function initApp() {
 // Listen for auth state changes (magic link callback)
 sb.auth.onAuthStateChange((event, session) => {
   if (event === 'SIGNED_IN' && session) {
+    // Salva email para pré-preencher na próxima visita
+    localStorage.setItem('bossa_last_email', session.user.email);
     initApp();
   }
 });
