@@ -4791,7 +4791,7 @@ function jumpToToday() {
 // ═══════════════════════════════════════════════════════════════
 const SUPA_URL = 'https://kjqecetguaubswdtjihr.supabase.co';
 const SUPA_KEY = 'sb_publishable_Ywg0tvXegFGkp4CxMQaTQQ_alOKJZ3U';
-const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY, { auth: { flowType: 'implicit' } });
 window._supabase = sb;
 window._workspace = null;
 
